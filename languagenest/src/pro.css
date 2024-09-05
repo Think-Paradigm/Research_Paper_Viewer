@@ -1,0 +1,106 @@
+.bx{
+    border: 1px solid rgb(209, 201, 201);
+    width: 600px;
+    backdrop-filter: blur(25px);
+    height: 400px;
+    border-radius: 15px;
+    box-shadow: 10px 10px 10px rgba(0,0,0,0.2);
+    margin-top: 50px;
+}
+
+.bx div{
+    margin-top: 30px;
+    margin-bottom: 10px;
+
+}
+
+.bx input{
+    padding: 8px;
+    width: 300px;
+    margin-left: 5px;
+    border-radius: 15px;
+    border: 1px solid grey;
+}
+
+label{
+    font-size: 18px;
+    /* color: navy; */
+}
+
+.pic{
+    border: 1px solid rgb(207, 195, 195);
+    height: 150px;
+    width: 150px;
+    border-radius: 75px;
+    margin-left: 240px;
+}
+
+button{
+    background-color: navy;
+    color: white;
+    padding: 10px 30px;
+    width: 150px;
+    border-radius: 20px;
+    margin-left: 420px;
+    margin-top: 20px;
+}
+
+.nme{
+    display:flex;
+    flex-direction:row;
+    margin-left:100px;
+    margin-top:30px;
+}
+.rle{
+    display:flex;
+    flex-direction:row;
+    margin-left:112px;
+    margin-top:20px;
+}
+@media(max-width:367px)
+{
+    .bx{
+        width: 320px;
+    }
+    .nme, .rle{
+        margin-left: 20px;
+        margin-right: 30px;
+    }
+    .rle{
+        margin-left: 30px;
+    }
+    .rle input{
+        width: 200px;
+      }
+    .pic{
+        margin-left: 95px;
+    }
+    button{
+        margin-left: 185px;
+        width: 100px;
+    }
+}
+@media(max-width:355px)
+{
+    .bx{
+        width: 300px;
+    }
+    .nme, .rle{
+        margin-left: 10px;
+        margin-right: 30px;
+    }
+    .rle{
+        margin-left: 20px;
+    }
+  .rle input{
+    width: 190px;
+
+  }
+    .pic{
+        margin-left: 80px;
+    }
+    button{
+        margin-left: 170px;
+        width: 100px;
+    }
+}
