@@ -1,17 +1,16 @@
-
-
-
-
 import React, { useState } from 'react';
 import { BiDotsVerticalRounded } from 'react-icons/bi';
 import { AiOutlinePlus } from 'react-icons/ai';
+import { AnimatePresence } from 'framer-motion';
+
 import {
   Box,
+  Button,
   Grid,
   IconButton,
   Text,
   VStack,
-  Flex,
+  HStack,
   Image,
   Menu,
   MenuButton,
@@ -24,22 +23,22 @@ import {
   ModalHeader,
   ModalBody,
   ModalCloseButton,
+  Flex,
 } from '@chakra-ui/react';
-import EditPopup from './pup'; // Ensure this component uses props correctly
-import Pro from './pro'; // Your add profile component
+import EditPopup from './pup';
+import Pro from './pro';
 
-const Team = () => {
+const New = () => {
   const [profiles, setProfiles] = useState(
-    Array.from({ length: 2 }).map((_, index) => ({
+    Array.from({ length: 0 }).map((_, index) => ({
       id: index,
       name: `Person ${index + 1}`,
-      role: `(Person Role ${index + 1})`,
+      role: `(Person Role ${index + 1})`
     }))
   );
 
   const [activeIndex, setActiveIndex] = useState(null);
-  const { isOpen: isAddProfileOpen, onOpen: onAddProfileOpen, onClose: onAddProfileClose } = useDisclosure();
-  const { isOpen: isEditProfileOpen, onOpen: onEditProfileOpen, onClose: onEditProfileClose } = useDisclosure();
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const [editingProfile, setEditingProfile] = useState(null);
 
   const handleDotsClick = (index) => {
@@ -53,7 +52,6 @@ const Team = () => {
 
   const handleEdit = (index) => {
     setEditingProfile(profiles[index]);
-    onEditProfileOpen(); // Open the modal for editing
     setActiveIndex(null);
   };
 
@@ -62,12 +60,11 @@ const Team = () => {
       profile.id === updatedProfile.id ? updatedProfile : profile
     ));
     setEditingProfile(null);
-    onEditProfileClose(); // Close the modal after saving
   };
 
   const handleAddProfile = (newProfile) => {
     setProfiles([...profiles, { ...newProfile, id: profiles.length }]);
-    onAddProfileClose();
+    onClose();
   };
 
   return (
@@ -76,7 +73,7 @@ const Team = () => {
         {profiles.map((profile, index) => (
           <Box key={profile.id} borderWidth="1px" borderRadius="lg" overflow="hidden" position="relative" backgroundColor="rgb(240, 248, 255)">
             <Menu>
-              <MenuButton as={IconButton} style={{marginLeft:'180px',height:'35px'}} icon={<BiDotsVerticalRounded />} onClick={() => handleDotsClick(index)} />
+              <MenuButton as={IconButton} style={{marginLeft:'180px'}} icon={<BiDotsVerticalRounded />} onClick={() => handleDotsClick(index)} />
               <MenuList>
                 <MenuItem onClick={() => handleEdit(index)}>Edit</MenuItem>
                 <MenuItem onClick={() => handleDelete(profile.id)}>Delete</MenuItem>
@@ -97,15 +94,22 @@ const Team = () => {
             </VStack>
           </Box>
         ))}
-        <Flex justifyContent="center" alignItems="center" cursor="pointer" onClick={onAddProfileOpen}>
+        <Flex justifyContent="center" alignItems="center" cursor="pointer" onClick={onOpen}>
           <Box borderRadius="80px" backgroundColor="rgb(224, 222, 222)" width="150px" height="150px" display="flex" alignItems="center" justifyContent="center">
             <AiOutlinePlus size={100} className='plus' />
           </Box>
         </Flex>
       </Grid>
 
-      {/* Modal for adding a new profile */}
-      <Modal isOpen={isAddProfileOpen} onClose={onAddProfileClose}>
+      {editingProfile && (
+        <EditPopup
+          profile={editingProfile}
+          onClose={() => setEditingProfile(null)}
+          onSave={handleSave}
+        />
+      )}
+
+      <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Add New Profile</ModalHeader>
@@ -115,26 +119,8 @@ const Team = () => {
           </ModalBody>
         </ModalContent>
       </Modal>
-
-      {/* Modal for editing a profile */}
-      <Modal isOpen={isEditProfileOpen} onClose={onEditProfileClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Edit Profile</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            {editingProfile && (
-              <EditPopup
-                profile={editingProfile}
-                onClose={() => setEditingProfile(null)}
-                onSave={handleSave}
-              />
-            )}
-          </ModalBody>
-        </ModalContent>
-      </Modal>
     </Box>
   );
 };
 
-export default Team;
+export default New;

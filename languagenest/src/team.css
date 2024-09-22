@@ -107,6 +107,11 @@ cursor: pointer;
       padding-left: 25px;
       color: grey;
   }
+.btm{
+  background-color: rgb(159, 159, 234);
+  height: 100px;
+  margin-top: 50px;
+}
 
   @media(max-width: 367px) {
     .grd {

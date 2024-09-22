@@ -1,46 +1,105 @@
-import React, { useState, useEffect } from 'react';
-import './popup.css';
+import React, { useState, useRef } from 'react';
+import {
+  Box,
+  Button,
+  Input,
+  Image,
+  Text,
+  IconButton,
+  useToast,
+} from '@chakra-ui/react';
+import { FaSearch } from 'react-icons/fa';
 
-function EditPopup({ profile, onClose, onSave }) {
+function Pup({ profile, onClose, onSave }) {
   const [name, setName] = useState(profile.name);
   const [role, setRole] = useState(profile.role);
+  const [image, setImage] = useState(profile.image || ''); // State for the image URL
+  const fileInputRef = useRef(null); // Ref for the file input element
+  const toast = useToast();
 
   const handleSave = () => {
-    onSave({ ...profile, name, role });
+    onSave({ ...profile, name, role, image }); // Pass the image URL when saving
+    toast({ title: "Profile saved.", status: "success", duration: 3000, isClosable: true });
+  };
+
+  const handleImageClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click(); // Trigger file input click
+    }
+  };
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImage(reader.result); // Set the image preview URL
+      };
+      reader.readAsDataURL(file); // Read the file as a data URL
+    }
   };
 
   return (
-    <div className="popup-overlay">
-      <div className="popup-content">
-        <h2 style={{marginBottom:'10px'}}>Edit Profile</h2>
-        <div class="image-container">
-        <img src='https://www.befunky.com/images/wp/wp-2021-01-linkedin-profile-picture-focus-face.jpg?auto=avif,webp&format=jpg&width=944'
-         style={{width:'100px',height:'100px', border:'1px solid grey', borderRadius:'50px', marginLeft:'10px', cursor:'pointer'}}/>
-        <div class="icon-overlay">
-              <i class="fa fa-search"></i>
-          </div>
-          </div>
-        <div style={{marginBottom:'6px'}}>
-          <label>Name:</label>
-          <input 
-            type="text" 
-            value={name} 
-            onChange={(e) => setName(e.target.value)} 
+    <Box className="popup-overlay">
+      <Box
+        bg="white"
+        p={5}
+        borderRadius="md"
+        boxShadow="md"
+        width="400px"
+      >
+        <Text fontSize="lg" mb={4}>Edit Profile</Text>
+        <Box
+          onClick={handleImageClick}
+          position="relative"
+          display="inline-block"
+          mb={4}
+        >
+          <Image
+            src={image || 'https://www.befunky.com/images/wp/wp-2021-01-linkedin-profile-picture-focus-face.jpg?auto=avif,webp&format=jpg&width=944'}
+            boxSize="100px"
+            borderWidth="1px"
+            borderColor="gray.300"
+            borderRadius="full"
+            cursor="pointer"
           />
-        </div>
-        <div style={{marginLeft:'12px'}}>
-          <label>Role:</label>
-          <input 
-            type="text" 
-            value={role} 
-            onChange={(e) => setRole(e.target.value)} 
+          <IconButton
+            aria-label="Edit Image"
+            icon={<FaSearch />}
+            style={{backgroundColor:'navy',color:'white'}}
+            size="sm"
+            position="absolute"
+            top={0}
+            right={0}
+            m={1}
+            borderRadius="full"
           />
-        </div>
-        <button className='savee' onClick={handleSave}>Save</button>
-        <button onClick={onClose}>Close</button>
-      </div>
-    </div>
+          <Input
+            type="file"
+            ref={fileInputRef}
+            style={{ display: 'none' }} // Hide the file input
+            onChange={handleFileChange} // Handle file input changes
+          />
+        </Box>
+        <Box mb={3}>
+          <Text mb={1}>Name:</Text>
+          <Input
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+        </Box>
+        <Box mb={3}>
+          <Text mb={1}>Role:</Text>
+          <Input
+            value={role}
+            onChange={(e) => setRole(e.target.value)}
+          />
+        </Box>
+        <Button style={{backgroundColor:'navy',color:'white'}} mr={2} onClick={handleSave}>Save</Button>
+        <Button variant="outline" onClick={onClose}>Close</Button>
+      </Box>
+    </Box>
   );
 }
 
-export default EditPopup;
+export default Pup;
